@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.samples.apps.sunflower.HomeViewPagerFragmentDirections
-import com.google.samples.apps.sunflower.PlantListFragment
+import com.google.samples.apps.sunflower.compose.plantlist.PlantItem
 import com.google.samples.apps.sunflower.data.Plant
 import com.google.samples.apps.sunflower.databinding.ListItemPlantBinding
 
@@ -34,13 +34,16 @@ import com.google.samples.apps.sunflower.databinding.ListItemPlantBinding
 class PlantAdapter : ListAdapter<Plant, RecyclerView.ViewHolder>(PlantDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return PlantViewHolder(
-            ListItemPlantBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+        val viewBinding = ListItemPlantBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+        val holder = PlantViewHolder(viewBinding)
+        viewBinding.composeView.setContent {
+            PlantItem(getItem(holder.bindingAdapterPosition))
+        }
+        return holder
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
